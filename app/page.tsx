@@ -106,17 +106,34 @@ export default function Home() {
       }
       
       console.log("Fetching transcripts for URLs:", validUrls);
+      let transcriptsResponse;
       
       // Step 1: Fetch transcripts using the correct endpoint
-      const transcriptsResponse = await axios.post('/api/transcripts', {
-        urls: validUrls,
-        preferred_language: "auto"
-      });
-      
-      console.log("Transcripts response:", transcriptsResponse.data);
-      
-      if (!transcriptsResponse.data.transcripts) {
-        throw new Error("No transcripts returned from API");
+      try {
+        transcriptsResponse = await axios.post('/api/transcripts', {
+          urls: validUrls,
+          preferred_language: "auto"
+        });
+        
+        console.log("Transcripts response:", {
+          status: transcriptsResponse.status,
+          headers: transcriptsResponse.headers,
+          data: transcriptsResponse.data,
+          url: validUrls[0]  // Log the URL being processed
+        });
+        
+        if (!transcriptsResponse.data.transcripts) {
+          console.error("No transcripts data in response for URL:", validUrls[0]);
+          throw new Error("No transcripts returned from API");
+        }
+      } catch (error: any) {
+        console.error('Detailed transcript error:', {
+          error: error,
+          response: error.response?.data,
+          status: error.response?.status,
+          headers: error.response?.headers
+        });
+        throw error;
       }
       
       // Prepare transcripts for summarization
