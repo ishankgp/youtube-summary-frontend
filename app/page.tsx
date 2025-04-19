@@ -163,7 +163,15 @@ export default function Home() {
       if (error.response) {
         console.log('Error response data:', error.response.data);
         console.log('Error response status:', error.response.status);
-        errorMessage = `API Error (${error.response.status}): ${error.response.data?.detail || error.response.data?.message || errorMessage}`;
+        
+        // Make caption-related errors more user-friendly
+        if (error.response.data?.detail?.includes('Could not access video transcripts')) {
+          errorMessage = 'This video either does not exist or does not have captions enabled. Please check that:' +
+            '\n1. The video URL is correct' +
+            '\n2. The video has closed captions available';
+        } else {
+          errorMessage = `API Error (${error.response.status}): ${error.response.data?.detail || error.response.data?.message || errorMessage}`;
+        }
       } else if (error.request) {
         console.log('Error request:', error.request);
         errorMessage = 'No response received from API. Please check your connection.';
