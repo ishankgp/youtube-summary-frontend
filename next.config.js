@@ -5,6 +5,14 @@ const nextConfig = {
     return [
       // Map to correct endpoints as defined in main.py
       {
+        source: '/api/validate-url',
+        destination: 'https://web-production-5da4a.up.railway.app/api/validate-url',
+      },
+      {
+        source: '/api/validate',
+        destination: 'https://web-production-5da4a.up.railway.app/api/validate',
+      },
+      {
         source: '/api/transcripts',
         destination: 'https://web-production-5da4a.up.railway.app/api/transcripts',
       },
