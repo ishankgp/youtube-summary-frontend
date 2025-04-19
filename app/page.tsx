@@ -61,49 +61,17 @@ export default function Home() {
   }
 
   const validateUrl = async (url: string, index: number) => {
-    if (!url) return false
-    
-    setValidationStatus(prev => ({
-      ...prev,
-      [index]: 'validating'
-    }))
-    
     try {
-      // Try the first endpoint format
-      try {
-        const response = await axios.post('/api/validate-url', { url })
-        setValidationStatus(prev => ({
-          ...prev,
-          [index]: response.data.valid ? 'valid' : 'invalid'
-        }))
-        return response.data.valid
-      } catch (error: any) {
-        if (error.response?.status === 404) {
-          // If first endpoint not found, try alternative endpoint
-          try {
-            const response = await axios.post('/api/validate', { url })
-            setValidationStatus(prev => ({
-              ...prev,
-              [index]: response.data.valid ? 'valid' : 'invalid'
-            }))
-            return response.data.valid
-          } catch (secondError: any) {
-            // If both attempts fail, try a direct validation without API
-            // Simple YouTube URL validation
-            const isValidYoutubeUrl = /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/).+$/.test(url);
-            setValidationStatus(prev => ({
-              ...prev,
-              [index]: isValidYoutubeUrl ? 'valid' : 'invalid'
-            }))
-            return isValidYoutubeUrl;
-          }
-        } else {
-          throw error; // Re-throw if it's not a 404
-        }
-      }
+      // Simple YouTube URL validation
+      const isValidYoutubeUrl = /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/).+$/.test(url);
+      setValidationStatus(prev => ({
+        ...prev,
+        [index]: isValidYoutubeUrl ? 'valid' : 'invalid'
+      }))
+      return isValidYoutubeUrl;
     } catch (error: any) {
       console.error('Error validating URL:', error)
-      setErrorMessage(`API Error: ${error.response?.data?.message || error.message || 'Failed to validate URL'}`)
+      setErrorMessage(`Error: Failed to validate URL`)
       setValidationStatus(prev => ({
         ...prev,
         [index]: 'invalid'
