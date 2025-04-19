@@ -13,6 +13,7 @@ interface Transcript {
     timestamp: string;
     text: string;
   }[];
+  is_generated?: boolean;
 }
 
 interface TranscriptDisplayProps {
@@ -35,7 +36,11 @@ export default function TranscriptDisplay({ transcripts }: TranscriptDisplayProp
           <div className="mb-4">
             <h2 className="text-xl font-semibold">
               Video {index + 1}: {transcript.url} 
-              {transcript.language && <span className="text-sm text-muted-foreground ml-2">(Language: {transcript.language})</span>}
+              <span className="text-sm text-muted-foreground ml-2">
+                (Language: {transcript.language}
+                {transcript.is_generated && " - Auto-generated"}
+                )
+              </span>
             </h2>
           </div>
 
